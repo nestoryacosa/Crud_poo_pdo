@@ -36,5 +36,35 @@
             $resultado = $consultar->fetchall(PDO::FETCH_ASSOC);
             return $resultado;
         }
-    } 
+
+        public function actualizarUsr(int $id,string $nombre, string $email, string $telefono){
+            $this->nombre = $nombre;
+            $this->email = $email;
+            $this->telefono = $telefono;
+            // para evitar inyección sql usamos una sentencia preparada
+            $sql = "UPDATE contacto SET nombre=? ,email =? ,telefono=? 
+            WHERE id = $id";
+            $actualizar = $this->conex->prepare($sql);
+            $arregloDatos = array($this->nombre,$this->email,$this->telefono);
+            $resultadoActualizar = $actualizar->execute($arregloDatos);
+            return $resultadoActualizar;
+        }
+
+        public function getUsr(int $id){
+            $sql = "SELECT * FROM contacto WHERE id = ? ";
+            $arrId = array($id);
+            $query = $this->conex->prepare($sql);
+            $query->execute($arrId);
+            $resultado = $query->fetch(PDO::FETCH_ASSOC);
+            return $resultado;
+        }
+
+        public function borrarUsr(int $id){
+            $sql = "DELETE FROM contacto WHERE id = ? ";
+            $arrId = array($id);
+            $borrar = $this->conex->prepare($sql);
+            $borrado = $borrar->execute($arrId);
+            return $borrado;
+           }
+        } 
 ?>
